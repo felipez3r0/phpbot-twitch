@@ -5,6 +5,9 @@ namespace App\Command\Twitch;
 use App\TwitchChatClient;
 use Minicli\Command\CommandController;
 
+use PiPHP\GPIO\GPIO;
+use PiPHP\GPIO\Pin\PinInterface;
+
 class DefaultController extends CommandController
 {
     private $client;
@@ -98,7 +101,7 @@ class DefaultController extends CommandController
         foreach ($this->rankingD100 as $user => $roll) {
             $this->sendMessage('@' . $user . ' ficou em ' . $top3 . 'º lugar com a rolagem - ' . $roll);
             $top3++;
-            if ($top3 == 3) {
+            if ($top3 > 3) {
                 break;
             }
         }
@@ -107,6 +110,14 @@ class DefaultController extends CommandController
     public function commands($msg, $user)
     {
         switch ($msg) {
+            case '!acenderled':
+                // Create a GPIO object
+                $gpio = new GPIO();
+                // Retrieve pin 18 and configure it as an output pin
+                $pin = $gpio->getOutputPin(11);
+                // Set the value of the pin high (turn it on)
+                $pin->setValue(PinInterface::VALUE_HIGH);
+                break;
             case '!roll20':
                 $roll = rand(1, 20);
                 $this->sendMessage('@' . $user . ' o resultado do seu D100 é ' . $roll);
@@ -117,7 +128,7 @@ class DefaultController extends CommandController
             case '!comandos':
                 $this->sendMessage('Atualmente os comandos são: roll20, roll100, salve');
                 break;
-            // Game D100  
+                // Game D100  
             case '!roll100':
                 $roll = rand(1, 100);
                 if ($this->gameD100) {

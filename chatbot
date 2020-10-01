@@ -11,7 +11,6 @@ use Minicli\App;
 
 $app = new App([
     'app_path' => __DIR__ . '/app/Command',
-
     #Twitch
     'twitch_user' => TWITCH_USER,
     'twitch_oauth' => TWITCH_AUTH    

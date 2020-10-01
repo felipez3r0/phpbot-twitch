@@ -10,6 +10,7 @@
     }
   },
   "require": {
-    "minicli/minicli": "^2.0"
+    "minicli/minicli": "^2.0",
+    "piphp/gpio": "^0.4.0"
   }
 }
