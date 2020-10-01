@@ -117,6 +117,7 @@ class DefaultController extends CommandController
                 $pin = $gpio->getOutputPin(11);
                 // Set the value of the pin high (turn it on)
                 $pin->setValue(PinInterface::VALUE_HIGH);
+                var_dump($pin);
                 break;
             case '!roll20':
                 $roll = rand(1, 20);
