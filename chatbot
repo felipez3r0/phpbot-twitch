@@ -1,0 +1,21 @@
+#!/usr/bin/php
+<?php
+require __DIR__ .'/env.php';
+if (php_sapi_name() !== 'cli') {
+    exit;
+}
+
+require __DIR__ . '/vendor/autoload.php';
+
+use Minicli\App;
+
+$app = new App([
+    'app_path' => __DIR__ . '/app/Command',
+
+    #Twitch
+    'twitch_user' => TWITCH_USER,
+    'twitch_oauth' => TWITCH_AUTH    
+]);
+
+$app->setSignature("Chatbot para Twitch.\n./chatbot twitch");
+$app->runCommand($argv);
