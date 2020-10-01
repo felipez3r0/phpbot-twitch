@@ -93,7 +93,7 @@ class DefaultController extends CommandController
 
     public function endGameD100()
     {
-        asort($this->rankingD100);
+        arsort($this->rankingD100);
         $top3 = 1;
         foreach ($this->rankingD100 as $user => $roll) {
             $this->sendMessage('@' . $user . ' ficou em ' . $top3 . 'º lugar com a rolagem - ' . $roll);
