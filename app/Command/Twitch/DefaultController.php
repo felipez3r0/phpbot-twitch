@@ -155,7 +155,7 @@ class DefaultController extends CommandController
         }
 
         if (preg_match('/!canal \w+/', $msg)) {
-            if ($user == 'felipez3r0') {
+            if ($user == ADMIN_USER) {
                 $canal = explode(' ', $msg)[1];
                 $this->sendMessage('!sh-so ' . $canal);
             }
