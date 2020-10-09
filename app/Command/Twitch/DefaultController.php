@@ -121,7 +121,7 @@ class DefaultController extends CommandController
                 $pin->low();
                 break;
             case '!movermotor':
-                $codigopython = $_SERVER['DOCUMENT_ROOT']."/motor.py";
+                $codigopython = "motor.py";
                 shell_exec('python3 '.$codigopython);
                 $this->sendMessage('@' . $user . ' você acionou o motor!');
                 break;
