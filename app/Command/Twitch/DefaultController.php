@@ -11,6 +11,9 @@ class DefaultController extends CommandController
     private $client;
     private $rankingD100 = [];
     private $gameD100 = false;
+    private $vitoria = 0;
+    private $derrota = 0;
+    private $mortes = 0;
 
     public function handle()
     {
@@ -108,6 +111,7 @@ class DefaultController extends CommandController
     public function commands($msg, $user)
     {
         switch ($msg) {
+                // Raspberry Pi
             case '!piscarled':
                 $board = \Calcinai\PHPi\Factory::create();
                 $pin = $board->getPin(17); //BCM pin number
@@ -118,7 +122,28 @@ class DefaultController extends CommandController
                 break;
             case '!roll20':
                 $roll = rand(1, 20);
-                $this->sendMessage('@' . $user . ' o resultado do seu D100 é ' . $roll);
+                $this->sendMessage('@' . $user . ' o resultado do seu D20 é ' . $roll);
+                break;
+            case '!vitoria':
+                $this->sendMessage('Estamos com ' . $this->vitoria . ' vitórias!');
+                break;
+            case '!derrota':
+                $this->sendMessage('Estamos com ' . $this->vitoria . ' vitórias!');
+                break;
+            case '!mortes':
+                $this->sendMessage('Estamos com ' . $this->vitoria . ' vitórias!');
+                break;
+            case '!vitoria++':
+                $this->vitoria++;
+                $this->sendMessage('Mais uma vitória adicionada! Show!');
+                break;
+            case '!derrota++':
+                $this->derrota++;
+                $this->sendMessage('Mais uma derrota? Melhor encerrar por hoje.');
+                break;
+            case '!mortes++':
+                $this->mortes++;
+                $this->sendMessage('Mais uma morte adicionada!');
                 break;
             case '!salve':
                 $this->sendMessage('@' . $user . ' salve salve! <3');
