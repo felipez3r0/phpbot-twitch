@@ -4,9 +4,7 @@ namespace App\Command\Twitch;
 
 use App\TwitchChatClient;
 use Minicli\Command\CommandController;
-
-use PiPHP\GPIO\GPIO;
-use PiPHP\GPIO\Pin\PinInterface;
+use Calcinai\PHPi\Pin\PinFunction;
 
 class DefaultController extends CommandController
 {
@@ -110,14 +108,13 @@ class DefaultController extends CommandController
     public function commands($msg, $user)
     {
         switch ($msg) {
-            case '!acenderled':
-                // Create a GPIO object
-                $gpio = new GPIO();
-                // Retrieve pin 18 and configure it as an output pin
-                $pin = $gpio->getOutputPin(11);
-                // Set the value of the pin high (turn it on)
-                $pin->setValue(PinInterface::VALUE_HIGH);
-                var_dump($pin);
+            case '!piscarled':
+                $board = \Calcinai\PHPi\Factory::create();
+                $pin = $board->getPin(17); //BCM pin number
+                $pin->setFunction(PinFunction::OUTPUT);
+                $pin->high();
+                sleep(2);
+                $pin->low();
                 break;
             case '!roll20':
                 $roll = rand(1, 20);
@@ -155,7 +152,7 @@ class DefaultController extends CommandController
         }
 
         if (preg_match('/!canal \w+/', $msg)) {
-            if ($user == ADMIN_USER) {
+            if ($user == 'felipez3r0') {
                 $canal = explode(' ', $msg)[1];
                 $this->sendMessage('!sh-so ' . $canal);
             }
