@@ -111,7 +111,7 @@ class DefaultController extends CommandController
     public function commands($msg, $user)
     {
         switch ($msg) {
-                // Raspberry Pi
+            // Raspberry Pi
             case '!piscarled':
                 $board = \Calcinai\PHPi\Factory::create();
                 $pin = $board->getPin(17); //BCM pin number
@@ -120,6 +120,12 @@ class DefaultController extends CommandController
                 sleep(2);
                 $pin->low();
                 break;
+            case '!movermotor':
+                $codigopython = $_SERVER['DOCUMENT_ROOT']."/motor.py";
+                shell_exec('python3 '.$codigopython);
+                $this->sendMessage('@' . $user . ' você acionou o motor!');
+                break;
+            // FIM Raspberry Pi
             case '!roll20':
                 $roll = rand(1, 20);
                 $this->sendMessage('@' . $user . ' o resultado do seu D20 é ' . $roll);
