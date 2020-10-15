@@ -11,6 +11,7 @@
   },
   "require": {
     "minicli/minicli": "^2.0",
-    "calcinai/phpi": "dev-master"
+    "calcinai/phpi": "dev-master",
+    "ext-sockets": "*"
   }
 }
