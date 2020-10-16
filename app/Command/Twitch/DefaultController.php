@@ -134,10 +134,10 @@ class DefaultController extends CommandController
                 $this->sendMessage('Estamos com ' . $this->vitoria . ' vitórias!');
                 break;
             case '!derrota':
-                $this->sendMessage('Estamos com ' . $this->vitoria . ' vitórias!');
+                $this->sendMessage('Estamos com ' . $this->vitoria . ' derrotas!');
                 break;
             case '!mortes':
-                $this->sendMessage('Estamos com ' . $this->vitoria . ' vitórias!');
+                $this->sendMessage('Estamos com ' . $this->vitoria . ' mortes!');
                 break;
             case '!vitoria++':
                 $this->vitoria++;
