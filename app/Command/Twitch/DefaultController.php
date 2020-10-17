@@ -5,6 +5,7 @@ namespace App\Command\Twitch;
 use App\TwitchChatClient;
 use Minicli\Command\CommandController;
 use Calcinai\PHPi\Pin\PinFunction;
+use App\LootGame;
 
 class DefaultController extends CommandController
 {
@@ -14,6 +15,7 @@ class DefaultController extends CommandController
     private $vitoria = 0;
     private $derrota = 0;
     private $mortes = 0;
+    private $lootGame;
 
     public function handle()
     {
@@ -38,6 +40,7 @@ class DefaultController extends CommandController
         }
 
         $this->getPrinter()->info("Conectado.\n");
+        $this->lootGame = new LootGame;
 
         while (true) {
             $content = $this->client->read(512);
@@ -111,7 +114,7 @@ class DefaultController extends CommandController
     public function commands($msg, $user)
     {
         switch ($msg) {
-            // Raspberry Pi
+                // Raspberry Pi
             case '!piscarled':
                 $board = \Calcinai\PHPi\Factory::create();
                 $pin = $board->getPin(17); //BCM pin number
@@ -122,10 +125,10 @@ class DefaultController extends CommandController
                 break;
             case '!movermotor':
                 $codigopython = "motor.py";
-                shell_exec('python3 '.$codigopython);
+                shell_exec('python3 ' . $codigopython);
                 $this->sendMessage('@' . $user . ' você acionou o motor!');
                 break;
-            // FIM Raspberry Pi
+                // FIM Raspberry Pi
             case '!roll20':
                 $roll = rand(1, 20);
                 $this->sendMessage('@' . $user . ' o resultado do seu D20 é ' . $roll);
@@ -167,18 +170,27 @@ class DefaultController extends CommandController
                 }
                 break;
             case '!gamed100 iniciar':
-                if ($user == 'felipez3r0') {
+                if ($user == ADMIN_USER) {
                     $this->rankingD100 = [];
                     $this->sendMessage('Jogo d100 iniciado! Façam suas rolagens!');
                     $this->gameD100 = true;
                 }
                 break;
             case '!gamed100 encerrar':
-                if ($user == 'felipez3r0') {
+                if ($user == ADMIN_USER) {
                     $this->sendMessage('Jogo d100 finalizado!');
                     $this->gameD100 = false;
                     $this->endGameD100();
                 }
+                break;
+                // Loot Game
+            case '!loot':
+                $msg = $this->lootGame->receberLoot($user);
+                $this->sendMessage($msg);
+                break;
+            case '!pontos':
+                $msg = $this->lootGame->consultarPontos($user);
+                $this->sendMessage('@'.$user.$msg);
                 break;
         }
 
