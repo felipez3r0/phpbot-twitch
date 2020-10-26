@@ -12,7 +12,6 @@ class LootGame
         $this->db = $mysql->db;
     }
 
-    // TODO
     public function consultarInventario($user){
         $id = $this->checarUsuario($user);
         $result = $this->db->query('SELECT inventarios.qtde, itens.nome 

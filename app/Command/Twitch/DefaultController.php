@@ -6,16 +6,16 @@ use App\TwitchChatClient;
 use Minicli\Command\CommandController;
 use Calcinai\PHPi\Pin\PinFunction;
 use App\LootGame;
+use App\GameD100;
 
 class DefaultController extends CommandController
 {
     private $client;
-    private $rankingD100 = [];
-    private $gameD100 = false;
     private $vitoria = 0;
     private $derrota = 0;
     private $mortes = 0;
     private $lootGame;
+    private $gameD100;
 
     public function handle()
     {
@@ -41,6 +41,7 @@ class DefaultController extends CommandController
 
         $this->getPrinter()->info("Conectado.\n");
         $this->lootGame = new LootGame;
+        $this->gameD100 = new GameD100;
 
         while (true) {
             $content = $this->client->read(512);
@@ -86,29 +87,6 @@ class DefaultController extends CommandController
     public function sendMessage($msg)
     {
         $this->client->send('PRIVMSG #' . $this->client::$channel . ' :' . $msg);
-    }
-
-    public function gameD100($user, $roll)
-    {
-        if (!isset($this->rankingD100[$user])) {
-            $this->sendMessage('@' . $user . ' o resultado do seu d100 é ' . $roll);
-            $this->rankingD100[$user] = $roll;
-        } else {
-            $this->sendMessage('@' . $user . ' a sua rolagem já foi realizada.');
-        }
-    }
-
-    public function endGameD100()
-    {
-        arsort($this->rankingD100);
-        $top3 = 1;
-        foreach ($this->rankingD100 as $user => $roll) {
-            $this->sendMessage('@' . $user . ' ficou em ' . $top3 . 'º lugar com a rolagem - ' . $roll);
-            $top3++;
-            if ($top3 > 3) {
-                break;
-            }
-        }
     }
 
     public function commands($msg, $user)
@@ -163,24 +141,26 @@ class DefaultController extends CommandController
                 // Game D100  
             case '!roll100':
                 $roll = rand(1, 100);
-                if ($this->gameD100) {
-                    $this->gameD100($user, $roll);
+                if ($this->gameD100->ativo) {
+                    $msg = $this->gameD100->adicionarD100($user, $roll);
                 } else {
-                    $this->sendMessage('Jogo d100 não está ativado!');
+                    $msg = 'Jogo d100 não está ativado!';
                 }
+                $this->sendMessage($msg);
                 break;
             case '!gamed100 iniciar':
                 if ($user == ADMIN_USER) {
-                    $this->rankingD100 = [];
+                    $this->gameD100->resetRanking();
                     $this->sendMessage('Jogo d100 iniciado! Façam suas rolagens!');
-                    $this->gameD100 = true;
+                    $this->gameD100->ativo = true;
                 }
                 break;
             case '!gamed100 encerrar':
                 if ($user == ADMIN_USER) {
                     $this->sendMessage('Jogo d100 finalizado!');
-                    $this->gameD100 = false;
-                    $this->endGameD100();
+                    $this->gameD100->ativo = false;
+                    $msg = $this->gameD100->finalizarJogo();
+                    $this->sendMessage($msg);
                 }
                 break;
             // Loot Game
