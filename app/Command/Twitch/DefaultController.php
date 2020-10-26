@@ -183,14 +183,22 @@ class DefaultController extends CommandController
                     $this->endGameD100();
                 }
                 break;
-                // Loot Game
+            // Loot Game
             case '!loot':
                 $msg = $this->lootGame->receberLoot($user);
                 $this->sendMessage($msg);
                 break;
             case '!pontos':
                 $msg = $this->lootGame->consultarPontos($user);
-                $this->sendMessage('@'.$user.$msg);
+                $this->sendMessage('@' . $user . $msg);
+                break;
+            case '!ranking':
+                $msg = $this->lootGame->verificarRanking();
+                $this->sendMessage($msg);
+                break;
+            case '!inventario':
+                $msg = $this->lootGame->consultarInventario($user);
+                $this->sendMessage('@' . $user . $msg);
                 break;
         }
 

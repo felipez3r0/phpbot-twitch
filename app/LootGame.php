@@ -14,7 +14,36 @@ class LootGame
 
     // TODO
     public function consultarInventario($user){
+        $id = $this->checarUsuario($user);
+        $result = $this->db->query('SELECT inventarios.qtde, itens.nome 
+        FROM inventarios INNER JOIN itens ON itens.id = inventarios.item_id
+        WHERE usuario_id = '.$id); 
+        if($result->num_rows == 0){
+            return " não foram encontrados itens para esse usuário.";
+        } else {
+            $msg = " - INVENTÁRIO: ";
+            while($row = $result->fetch_object()){
+                $msg .= $row->nome." (".$row->qtde.") | ";
+            }
+            $msg = substr($msg,0,-3);
+            return $msg;
+        }        
+    }
 
+    public function verificarRanking(){
+        $result = $this->db->query('SELECT id,pontos,login FROM usuarios ORDER BY pontos DESC LIMIT 3'); 
+        if($result->num_rows == 0){
+            return " não foram encontrados usuários.";
+        } else {
+            $c = 1;
+            $msg = "RANKING: ";
+            while($row = $result->fetch_object()){
+                $msg .= $c."º - ".$row->login." (".$row->pontos.") | ";
+                $c++;
+            }
+            $msg = substr($msg,0,-3);
+            return $msg;
+        }
     }
 
     public function consultarPontos($user){
